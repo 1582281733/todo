@@ -1,0 +1,72 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "待办清单",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/timer/index",
+			"style": {
+				"navigationBarTitleText": "专注计时",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/rest/index",
+			"style": {
+				"navigationBarTitleText": "休息时间",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/stats/index",
+			"style": {
+				"navigationBarTitleText": "数据统计",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "用户登录",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "个人资料",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/register/index",
+			"style": {
+				"navigationBarTitleText": "用户注册",
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "待办清单",
+		"navigationBarBackgroundColor": "#4a90e2",
+		"backgroundColor": "#F5F5F5"
+	}
+}
