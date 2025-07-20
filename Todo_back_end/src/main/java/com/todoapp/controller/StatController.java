@@ -33,10 +33,8 @@ public class StatController {
         // 如果没有提供日期参数，则使用当前日期
         if (date == null) {
             date = LocalDate.now();
-        } else {
-            // 确保日期参数正确，加一天修正时区问题
-            date = date.plusDays(1);
         }
+        // 移除错误的日期加1天逻辑
         System.out.println("后端使用的日期: " + date);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

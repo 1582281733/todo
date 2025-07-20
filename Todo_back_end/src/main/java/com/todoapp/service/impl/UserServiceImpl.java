@@ -52,10 +52,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new RuntimeException("用户名已存在");
         }
 
-        // 创建新用户
+        // 创建新用户（直接保存原始密码）
         User user = new User();
         user.setUsername(registerDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        // user.setPassword(passwordEncoder.encode(registerDTO.getPassword())); // ← 删除
+        user.setPassword(registerDTO.getPassword());                          // ← 明文
         user.setEmail(registerDTO.getEmail());
         user.setCreatedAt(LocalDateTime.now());
         userMapper.insert(user);
