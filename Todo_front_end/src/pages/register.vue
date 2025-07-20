@@ -237,7 +237,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #a78bfa, #818cf8);
+  /* 淡蓝色清新渐变背景 */
+  background: linear-gradient(135deg, #e8f4fd 0%, #c8e6fd 30%, #a1d2ff 100%);
   z-index: -1;
 }
 
@@ -245,14 +246,16 @@ export default {
   width: 85%;
   max-width: 650rpx;
   background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 30rpx;
-  padding: 50rpx 40rpx;
-  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+  border-radius: 32rpx;
+  padding: 60rpx 50rpx;
+  box-shadow: 0 20rpx 40rpx rgba(33, 150, 243, 0.12);
+  backdrop-filter: blur(10rpx);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .register-title {
   text-align: center;
-  margin-bottom: 50rpx;
+  margin-bottom: 60rpx;
 }
 
 .title-row {
@@ -260,36 +263,41 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: 10rpx;
+  margin-bottom: 12rpx;
 }
 
 .back-button {
   position: absolute;
   left: 0;
-  width: 60rpx;
-  height: 60rpx;
-  background-color: rgba(129, 140, 248, 0.1);
+  width: 64rpx;
+  height: 64rpx;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.2);
 }
 
 .back-icon {
-  font-size: 36rpx;
-  color: #818cf8;
+  font-size: 32rpx;
+  color: #1976d2;
   font-weight: bold;
 }
 
 .welcome-text {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
+  font-size: 52rpx;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .subtitle-text {
-  font-size: 28rpx;
-  color: #666;
+  font-size: 30rpx;
+  color: #546e7a;
+  font-weight: 400;
 }
 
 .register-form {
@@ -297,42 +305,51 @@ export default {
 }
 
 .input-group {
-  margin-bottom: 30rpx;
+  margin-bottom: 36rpx;
 }
 
 .input-label {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 10rpx;
+  font-size: 30rpx;
+  color: #37474f;
+  margin-bottom: 12rpx;
   display: block;
+  font-weight: 500;
 }
 
 .input-wrapper {
   position: relative;
-  border-radius: 10rpx;
-  background-color: #f5f7fa;
-  height: 90rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #f8fbff, #f0f9ff);
+  height: 96rpx;
   display: flex;
   align-items: center;
-  padding: 0 30rpx;
+  padding: 0 32rpx;
+  border: 2rpx solid rgba(33, 150, 243, 0.1);
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #42a5f5;
+  box-shadow: 0 0 0 4rpx rgba(66, 165, 245, 0.1);
 }
 
 .input-field {
   flex: 1;
   height: 100%;
-  font-size: 30rpx;
-  color: #333;
+  font-size: 32rpx;
+  color: #263238;
+  background: transparent;
 }
 
 .input-icon {
-  font-size: 36rpx;
-  color: #818cf8;
+  font-size: 38rpx;
+  color: #42a5f5;
 }
 
 .terms-row {
   display: flex;
   align-items: center;
-  margin-bottom: 40rpx;
+  margin-bottom: 48rpx;
 }
 
 .checkbox-group {
@@ -341,61 +358,73 @@ export default {
 }
 
 .checkbox {
-  width: 36rpx;
-  height: 36rpx;
-  border: 2rpx solid #ccc;
-  border-radius: 8rpx;
-  margin-right: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid #90caf9;
+  border-radius: 10rpx;
+  margin-right: 12rpx;
   position: relative;
+  background: linear-gradient(135deg, #f8fbff, #f0f9ff);
+  transition: all 0.3s ease;
 }
 
 .checkbox.checked {
-  background-color: #818cf8;
-  border-color: #818cf8;
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
+  border-color: #1976d2;
+  transform: scale(1.05);
 }
 
 .checkbox.checked::after {
   content: "✓";
   position: absolute;
   color: white;
-  font-size: 24rpx;
+  font-size: 26rpx;
+  font-weight: bold;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
 .checkbox-label {
-  font-size: 26rpx;
-  color: #666;
+  font-size: 28rpx;
+  color: #546e7a;
+  font-weight: 500;
 }
 
 .terms-link {
-  font-size: 26rpx;
-  color: #818cf8;
+  font-size: 28rpx;
+  color: #42a5f5;
+  font-weight: 500;
 }
 
 .register-btn {
-  height: 90rpx;
-  background: linear-gradient(to right, #818cf8, #a78bfa);
-  border-radius: 45rpx;
+  height: 96rpx;
+  background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+  border-radius: 48rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 30rpx;
-  box-shadow: 0 6rpx 16rpx rgba(129, 140, 248, 0.4);
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 36rpx;
+  box-shadow: 0 12rpx 24rpx rgba(33, 150, 243, 0.3);
+  transition: all 0.3s ease;
+}
+
+.register-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 8rpx 16rpx rgba(33, 150, 243, 0.3);
 }
 
 .login-link {
   text-align: center;
-  font-size: 26rpx;
-  color: #666;
+  font-size: 28rpx;
+  color: #546e7a;
 }
 
 .link {
-  color: #818cf8;
-  font-weight: 500;
+  color: #42a5f5;
+  font-weight: 600;
 }
 </style>

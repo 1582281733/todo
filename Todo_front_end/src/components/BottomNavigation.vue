@@ -101,6 +101,14 @@ export default {
   padding: 20rpx 0;
   background-color: #ffffff;
   border-top: 1px solid #f1f5f9;
+  
+  /* === 新增：固定到底部 === */
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.04);
 }
 
 .nav-item {

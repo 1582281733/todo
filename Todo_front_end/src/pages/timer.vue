@@ -106,6 +106,13 @@ export default {
     this.clearTimer();
   },
   methods: {
+    // 统一生成本地 ISO 字符串：yyyy-MM-ddTHH:mm:ss
+    getLocalDateTime() {
+      const d = new Date()
+      const offset = d.getTimezoneOffset() * 60000   // 转毫秒
+      return new Date(d - offset).toISOString().slice(0, 19)
+    },
+
     // 获取随机鸡汤语录
     fetchRandomQuote() {
       api.quotes.getRandom()
@@ -147,13 +154,13 @@ export default {
         return;
       }
 
-      // 记录开始时间
-      this.startTime = new Date().toISOString();
+      // 记录开始时间 – 本地
+      this.startTime = this.getLocalDateTime()
 
       // 调用开始计时接口
       api.timers.start({
         todoId: this.todoId,
-        startTime: this.startTime
+        startTime: this.startTime   // 发送给后端的已是本地时间
       }).then(res => {
         if (res.code === 201) {
           // 保存计时ID
@@ -202,7 +209,7 @@ export default {
         content: '确定要结束计时吗？结束后将进入休息时间',
         success: (res) => {
           if (res.confirm) {
-            this.endTime = new Date().toISOString();
+            this.endTime = this.getLocalDateTime()
             this.clearTimer();
             this.completeTimerAndRest();
           }
@@ -228,7 +235,7 @@ export default {
 
       // 调用结束计时接口
       api.timers.end(this.timerId, {
-        endTime: this.endTime || new Date().toISOString()
+        endTime: this.endTime || this.getLocalDateTime()
       }).then(res => {
         if (res.code === 200) {
           this.isRunning = false;
@@ -278,7 +285,7 @@ export default {
 
       // 调用结束计时接口
       api.timers.end(this.timerId, {
-        endTime: this.endTime || new Date().toISOString()
+        endTime: this.endTime || this.getLocalDateTime()
       }).then(res => {
         if (res.code === 200) {
           this.isRunning = false;
