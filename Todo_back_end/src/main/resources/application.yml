@@ -28,6 +28,6 @@ mybatis-plus:
 
 jwt:
   secret: todoapp_secret_key
-  expiration: 3600 # 1小时
+  expiration: 604800 # 7天 (7*24*60*60=604800秒)
   tokenHeader: Authorization
   tokenPrefix: Bearer 

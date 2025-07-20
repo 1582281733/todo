@@ -69,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         result.put("userId", user.getId());
         result.put("username", user.getUsername());
         result.put("token", token);
-        result.put("expiresIn", 3600);
+        result.put("expiresIn", 604800); // 修改为7天
 
         return result;
     }
@@ -96,7 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         result.put("userId", user.getId());
         result.put("username", user.getUsername());
         result.put("token", token);
-        result.put("expiresIn", 3600);
+        result.put("expiresIn", 604800); // 修改为7天
         result.put("avatar", user.getAvatar());
 
         return result;
