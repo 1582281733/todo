@@ -1,8 +1,13 @@
 <template>
   <view class="rest-container">
-    <!-- 背景使用CSS渐变替代图片 -->
-    <view class="bg-gradient"></view>
-    
+    <!-- 背景图片 -->
+    <view
+        class="bg-gradient"
+        :style="{
+           backgroundImage: 'url(' + cardImages[index % cardImages.length] + ')'
+        }">
+    </view>
+
     <!-- 时钟圆圈 -->
     <view class="timer-circle">
       <view class="progress-ring" :style="{ background: `conic-gradient(#ffffff ${progressPercent}%, transparent 0%)` }"></view>
@@ -11,13 +16,13 @@
         <text class="rest-title">休息时光</text>
       </view>
     </view>
-    
+
     <!-- 激励文字 -->
     <view class="quote-container">
       <text class="quote-text">{{ motivationalQuote }}</text>
       <text class="status-text">休息让你更专注</text>
     </view>
-    
+
     <!-- 跳过按钮 -->
     <view class="skip-btn" @click="skipRest">
       <text>跳过休息</text>
@@ -41,7 +46,17 @@ export default {
         '放松身心，重新充电',
         '休息不是浪费时间，而是投资未来'
       ],
-      motivationalQuote: ''
+      motivationalQuote: '',
+      index: 0,
+      cardImages: [
+        '/static/1001.jpg',
+        '/static/wallhaven-j3x3x5.jpg',
+        '/static/wallhaven-zypyyv.png',
+        '/static/wallhaven-gpwp1d.jpg',
+        '/static/3.jpg',
+        '/static/5.png',
+        '/static/4.jpg'
+      ]
     };
   },
   computed: {
@@ -60,7 +75,10 @@ export default {
     // 随机选择激励文字
     const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
     this.motivationalQuote = this.motivationalQuotes[randomIndex];
-    
+
+    // 随机选择一张背景图
+    this.index = Math.floor(Math.random() * this.cardImages.length);
+
     // 开始休息计时
     this.startTimer();
   },
@@ -83,17 +101,17 @@ export default {
     restCompleted() {
       // 播放提示音
       const innerAudioContext = uni.createInnerAudioContext();
-      innerAudioContext.src = '/static/audio/timer-end.mp3';
+      innerAudioContext.src = '/static/audio/20250719_130757.m4a';
       innerAudioContext.play();
-      
+
       // 震动提示
       uni.vibrateShort();
-      
+
       uni.showToast({
         title: '休息结束，继续加油！',
         icon: 'success'
       });
-      
+
       setTimeout(() => {
         this.goToHomePage();
       }, 1500);
@@ -111,7 +129,7 @@ export default {
     goToHomePage() {
       // 返回首页
       uni.reLaunch({
-        url: '/pages/index/index'
+        url: '/pages/index'
       });
     }
   }
@@ -136,7 +154,9 @@ export default {
   top: 0;
   left: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, #FFB6C1, #DB7093);
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease;
 }
 
 .timer-circle {
@@ -230,4 +250,4 @@ export default {
   font-size: 28rpx;
   font-weight: bold;
 }
-</style> 
+</style>

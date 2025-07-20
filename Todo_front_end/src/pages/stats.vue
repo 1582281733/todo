@@ -3,30 +3,30 @@
     <!-- 顶部导航栏 -->
     <view class="nav-bar">
       <view class="tab-group">
-        <view 
-          class="stats-tab-item" 
-          :class="{ active: activeTab === 'daily' }" 
+        <view
+          class="stats-tab-item"
+          :class="{ active: activeTab === 'daily' }"
           @click="switchTab('daily')"
         >
           <text>日统计</text>
         </view>
-        <view 
-          class="stats-tab-item" 
-          :class="{ active: activeTab === 'weekly' }" 
+        <view
+          class="stats-tab-item"
+          :class="{ active: activeTab === 'weekly' }"
           @click="switchTab('weekly')"
         >
           <text>周统计</text>
         </view>
-        <view 
-          class="stats-tab-item" 
-          :class="{ active: activeTab === 'monthly' }" 
+        <view
+          class="stats-tab-item"
+          :class="{ active: activeTab === 'monthly' }"
           @click="switchTab('monthly')"
         >
           <text>月统计</text>
         </view>
       </view>
     </view>
-    
+
     <!-- 日期选择器 -->
     <view class="date-picker">
       <view class="date-arrow" @click="prevDate">
@@ -39,7 +39,7 @@
         <text>▶</text>
       </view>
     </view>
-    
+
     <!-- 统计概览 -->
     <view class="stats-overview">
       <view class="overview-item">
@@ -55,7 +55,7 @@
         <text class="overview-label">完成率</text>
       </view>
     </view>
-    
+
     <!-- 时间分布图 -->
     <view class="distribution-chart">
       <view class="chart-title">
@@ -64,43 +64,43 @@
       <view class="chart-container">
         <!-- 日统计-小时分布 -->
         <view v-if="activeTab === 'daily'" class="hourly-chart">
-          <view 
-            v-for="(item, index) in hourlyDistribution" 
-            :key="index"
+          <view
+            v-for="(item, index) in hourlyDistribution"
+            :key="stats"
             class="hour-bar"
           >
-            <view 
-              class="bar-fill" 
+            <view
+              class="bar-fill"
               :style="{ height: `${getBarHeight(item.duration)}rpx` }"
             ></view>
             <text class="bar-label">{{ item.hour }}</text>
           </view>
         </view>
-        
+
         <!-- 周统计-日分布 -->
         <view v-if="activeTab === 'weekly'" class="daily-chart">
-          <view 
-            v-for="(item, index) in dailyDistribution" 
-            :key="index"
+          <view
+            v-for="(item, index) in dailyDistribution"
+            :key="stats"
             class="day-bar"
           >
-            <view 
-              class="bar-fill" 
+            <view
+              class="bar-fill"
               :style="{ height: `${getBarHeight(item.duration)}rpx` }"
             ></view>
             <text class="bar-label">{{ getDayLabel(item.day) }}</text>
           </view>
         </view>
-        
+
         <!-- 月统计-周分布 -->
         <view v-if="activeTab === 'monthly'" class="weekly-chart">
-          <view 
-            v-for="(item, index) in weeklyDistribution" 
-            :key="index"
+          <view
+            v-for="(item, index) in weeklyDistribution"
+            :key="stats"
             class="week-bar"
           >
-            <view 
-              class="bar-fill" 
+            <view
+              class="bar-fill"
               :style="{ height: `${getBarHeight(item.duration)}rpx` }"
             ></view>
             <text class="bar-label">第{{ item.week }}周</text>
@@ -108,16 +108,16 @@
         </view>
       </view>
     </view>
-    
+
     <!-- 任务列表 -->
     <view class="task-list">
       <view class="list-title">
         <text>任务列表</text>
       </view>
       <view class="list-container">
-        <view 
-          v-for="(task, index) in taskList" 
-          :key="index"
+        <view
+          v-for="(task, index) in taskList"
+          :key="stats"
           class="task-item"
           :style="{ backgroundColor: task.backgroundColor || '#818cf8' }"
         >
@@ -127,48 +127,37 @@
           </view>
           <text class="task-time">{{ getTaskTimeInfo(task) }}</text>
         </view>
-        
+
         <view v-if="taskList.length === 0" class="empty-list">
           <text>暂无数据</text>
         </view>
       </view>
     </view>
-    
+
     <!-- 加载中 -->
     <view v-if="loading" class="loading-mask">
       <view class="loading-spinner"></view>
     </view>
-    
-    <!-- 底部导航栏 -->
-    <view class="tab-bar">
-      <view class="tab-item" :class="{ active: activeNavTab === 'todo' }" @click="switchNavTab('todo')">
-        <text class="tab-icon">📝</text>
-        <text class="tab-text">待办</text>
-      </view>
-      <view class="tab-item" :class="{ active: activeNavTab === 'stats' }" @click="switchNavTab('stats')">
-        <text class="tab-icon">📊</text>
-        <text class="tab-text">统计</text>
-      </view>
-      <view class="tab-item" :class="{ active: activeNavTab === 'mine' }" @click="switchNavTab('mine')">
-        <text class="tab-icon">👤</text>
-        <text class="tab-text">我的</text>
-      </view>
-    </view>
+
+    <!-- 移除原有的底部导航栏，使用组件 -->
+    <bottom-navigation :active-tab="'stats'"></bottom-navigation>
   </view>
 </template>
 
 <script>
-import api from '../../utils/api.js';
-import storage from '../../utils/storage.js';
+import api from '../utils/api.js';
+import storage from '../utils/storage.js';
+import BottomNavigation from "../components/BottomNavigation";
 
 export default {
+  components: {BottomNavigation},
   data() {
     return {
       activeTab: 'daily',
       activeNavTab: 'stats', // 底部导航栏当前选中的tab
       currentDate: null, // 将在mounted中初始化
       loading: false,
-      
+
       // 统计数据
       overview: {
         totalTime: 0,
@@ -207,22 +196,22 @@ export default {
       this.activeTab = tab;
       this.loadStats();
     },
-    
+
     // 切换底部导航栏
     switchNavTab(tab) {
       if (tab === this.activeNavTab) return;
-      
+
       if (tab === 'todo') {
         uni.redirectTo({
-          url: '/pages/index/index'
+          url: '/pages/index'
         });
       } else if (tab === 'mine') {
         uni.redirectTo({
-          url: '/pages/mine/index'
+          url: '/pages/mine'
         });
       }
     },
-    
+
     // 上一个日期
     prevDate() {
       if (this.activeTab === 'daily') {
@@ -245,12 +234,12 @@ export default {
       }
       this.loadStats();
     },
-    
+
     // 下一个日期
     nextDate() {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      
+
       if (this.activeTab === 'daily') {
         // 下一天
         const year = this.currentDate.getFullYear();
@@ -281,20 +270,20 @@ export default {
         }
       }
     },
-    
+
     // 显示日期选择器
     showDatePicker() {
       let mode = 'date';
       if (this.activeTab === 'monthly') {
         mode = 'year-month';
       }
-      
+
       uni.showToast({
         title: '日期选择功能开发中',
         icon: 'none'
       });
     },
-    
+
     // 加载统计数据
     loadStats() {
       // 检查登录状态
@@ -303,21 +292,21 @@ export default {
           title: '请先登录',
           icon: 'none'
         });
-        
+
         setTimeout(() => {
           uni.navigateTo({
             url: '/pages/login/index'
           });
         }, 1500);
-        
+
         return;
       }
-      
+
       this.loading = true;
-      
+
       let apiCall;
       let params = {};
-      
+
       if (this.activeTab === 'daily') {
         apiCall = api.stats.getDaily;
         params = {
@@ -334,15 +323,15 @@ export default {
           month: this.formatDate(this.currentDate, 'YYYY-MM')
         };
       }
-      
+
       apiCall(params)
         .then(res => {
           this.loading = false;
-          
+
           if (res.code === 200) {
             // 更新统计数据
             this.overview = res.data.overview;
-            
+
             if (this.activeTab === 'daily') {
               this.hourlyDistribution = res.data.hourlyDistribution;
             } else if (this.activeTab === 'weekly') {
@@ -350,7 +339,7 @@ export default {
             } else {
               this.weeklyDistribution = res.data.weeklyDistribution;
             }
-            
+
             this.taskList = res.data.taskList;
           } else {
             uni.showToast({
@@ -361,16 +350,16 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          
+
           uni.showToast({
             title: '获取统计数据失败',
             icon: 'none'
           });
-          
+
           console.error('获取统计数据失败:', err);
         });
     },
-    
+
     // 获取柱状图高度
     getBarHeight(duration) {
       if (!duration) return 0;
@@ -378,7 +367,7 @@ export default {
       const maxHeight = 200;
       // 根据当前分布数据中的最大值计算比例
       let maxDuration = 0;
-      
+
       if (this.activeTab === 'daily') {
         maxDuration = Math.max(...this.hourlyDistribution.map(item => item.duration), 60);
       } else if (this.activeTab === 'weekly') {
@@ -386,16 +375,16 @@ export default {
       } else {
         maxDuration = Math.max(...this.weeklyDistribution.map(item => item.duration), 60);
       }
-      
+
       return Math.max(20, (duration / maxDuration) * maxHeight);
     },
-    
+
     // 获取星期几标签
     getDayLabel(day) {
       const labels = ['一', '二', '三', '四', '五', '六', '日'];
       return labels[day - 1] || day;
     },
-    
+
     // 获取任务时间信息
     getTaskTimeInfo(task) {
       if (this.activeTab === 'daily') {
@@ -406,15 +395,15 @@ export default {
         return task.period || '';
       }
     },
-    
+
     // 格式化日期
     formatDate(date, format) {
       if (!date) return '';
-      
+
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
-      
+
       if (format === 'YYYY-MM-DD') {
         return `${year}-${month}-${day}`;
       } else if (format === 'YYYY-MM') {
@@ -422,10 +411,10 @@ export default {
       } else if (format === 'MM.DD') {
         return `${month}.${day}`;
       }
-      
+
       return `${year}-${month}-${day}`;
     },
-    
+
     // 获取周开始日期（周一）
     getWeekStart(date) {
       const newDate = new Date(date);  // 创建副本，避免修改原始日期
@@ -433,13 +422,13 @@ export default {
       const diff = newDate.getDate() - day + (day === 0 ? -6 : 1);
       return new Date(newDate.setDate(diff));
     },
-    
+
     // 获取周结束日期（周日）
     getWeekEnd(date) {
       const start = this.getWeekStart(new Date(date));
       return new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000);
     },
-    
+
     // 判断是否为今天
     isToday(date) {
       const today = new Date();
@@ -447,7 +436,7 @@ export default {
              date.getMonth() === today.getMonth() &&
              date.getDate() === today.getDate();
     },
-    
+
     // 初始化今天日期
     initToday() {
       const now = new Date();
@@ -462,11 +451,13 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f5f5f5;
+  /* 统一背景色、阴影等视觉风格 */
+  background-color: #f7f8fa;           /* ← 与 mine.vue 一致 */
   max-width: 500px;
   margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);  /* ← 阴影参数同步 */
   position: relative;
+  overflow: hidden;                 /* ← 新增：防止整体超高 */
 }
 
 .nav-bar {
@@ -602,8 +593,10 @@ export default {
 .task-list {
   background-color: #fff;
   margin-top: 20rpx;
-  padding: 30rpx 20rpx;
-  flex: 1;
+  /* 底部内边距增加，避免被 BottomNavigation 遮挡 */
+  padding: 30rpx 20rpx 120rpx 20rpx;   /* ← bottom = 120rpx */
+  flex: 1;                            /* 让内容区撑满剩余高度 */
+  overflow-y: auto;                  /* ← 内部滚动 */
 }
 
 .list-container {
@@ -676,14 +669,27 @@ export default {
 }
 
 /* 底部导航栏样式 */
-.tab-bar {
+.bottom-nav {
   display: flex;
-  height: 100rpx;
+  justify-content: space-around;
+  padding: 20rpx 0;
   background-color: #ffffff;
-  border-top: 1rpx solid #eeeeee;
+  border-top: 1px solid #f1f5f9;
+
+  /* === 新增：固定到底部并保持与 mine.vue 一致的视觉 === */
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 500px;
+  margin: 0 auto;
+  z-index: 1000;
+  border-top-left-radius: 24rpx;
+  border-top-right-radius: 24rpx;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.04);
 }
 
-.tab-item {
+.nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -704,4 +710,4 @@ export default {
 .tab-item.active {
   color: #4a90e2;
 }
-</style> 
+</style>

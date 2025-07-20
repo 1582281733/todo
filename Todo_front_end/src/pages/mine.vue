@@ -1,7 +1,7 @@
 <template>
-  <view class="mine-container">
+  <view class="container">
     <!-- 顶部用户信息 -->
-    <view class="user-info-section" @click="handleAvatarClick">
+    <view class="top-nav user-info-section" @click="handleAvatarClick">
       <view class="user-avatar">
         <view v-if="!userInfo.avatar" class="default-avatar">
           <text>{{userInfo.username ? userInfo.username.substr(0, 1) : '游'}}</text>
@@ -13,37 +13,25 @@
         <text class="user-id">{{isLoggedIn ? 'ID: ' + userInfo.id : '点击登录账号'}}</text>
       </view>
     </view>
-    
-    <!-- 中间内容区域 - 暂时为空 -->
+
+    <!-- 内容区 -->
     <view class="content-section">
-      <view class="empty-content">
-        <text class="empty-text">更多功能开发中...</text>
+      <view class="card">
+        <text class="empty-text"></text>
       </view>
     </view>
-    
-    <!-- 底部导航栏 -->
-    <view class="tab-bar">
-      <view class="tab-item" :class="{ active: activeTab === 'todo' }" @click="switchTab('todo')">
-        <text class="tab-icon">📝</text>
-        <text class="tab-text">待办</text>
-      </view>
-      <view class="tab-item" :class="{ active: activeTab === 'stats' }" @click="switchTab('stats')">
-        <text class="tab-icon">📊</text>
-        <text class="tab-text">统计</text>
-      </view>
-      <view class="tab-item" :class="{ active: activeTab === 'mine' }" @click="switchTab('mine')">
-        <text class="tab-icon">👤</text>
-        <text class="tab-text">我的</text>
-      </view>
-    </view>
+
+    <bottom-navigation :active-tab="'mine'"></bottom-navigation>
   </view>
 </template>
 
 <script>
-import api from '../../utils/api.js';
-import storage from '../../utils/storage.js';
+import api from '../utils/api.js';
+import storage from '../utils/storage.js';
+import BottomNavigation from "../components/BottomNavigation";
 
 export default {
+  components: {BottomNavigation},
   data() {
     return {
       activeTab: 'mine',
@@ -65,7 +53,7 @@ export default {
       // 获取登录状态
       const isLoggedIn = storage.isLoggedIn();
       this.isLoggedIn = isLoggedIn;
-      
+
       if (isLoggedIn) {
         // 获取本地存储的用户信息
         const userInfo = storage.getUserInfo() || {};
@@ -73,7 +61,7 @@ export default {
           ...this.userInfo,
           ...userInfo
         };
-        
+
         // 从服务器获取最新的用户信息
         this.fetchUserProfile();
       } else {
@@ -85,17 +73,17 @@ export default {
         };
       }
     },
-    
+
     // 获取用户资料
     fetchUserProfile() {
       if (!this.isLoggedIn) return;
-      
+
       this.loading = true;
-      
+
       api.user.getProfile()
         .then(res => {
           this.loading = false;
-          
+
           if (res.code === 200) {
             // 更新用户信息
             const userInfo = {
@@ -107,10 +95,10 @@ export default {
               birthday: res.data.birthday,
               signature: res.data.signature
             };
-            
+
             // 更新本地存储
             storage.saveLoginInfo(storage.getToken(), userInfo);
-            
+
             // 更新当前页面数据
             this.userInfo = {
               ...this.userInfo,
@@ -123,12 +111,12 @@ export default {
           console.error('获取用户资料失败:', err);
         });
     },
-    
+
     handleAvatarClick() {
       if (this.isLoggedIn) {
         // 已登录，跳转到个人资料页面
         uni.navigateTo({
-          url: '/pages/profile/index'
+          url: '/pages/profile'
         });
       } else {
         // 未登录，跳转到登录页面
@@ -137,7 +125,7 @@ export default {
         });
       }
     },
-    
+
     // 退出登录
     logout() {
       uni.showModal({
@@ -147,7 +135,7 @@ export default {
           if (res.confirm) {
             // 清除登录信息
             storage.clearLoginInfo();
-            
+
             // 更新状态
             this.isLoggedIn = false;
             this.userInfo = {
@@ -155,7 +143,7 @@ export default {
               id: '',
               avatar: ''
             };
-            
+
             uni.showToast({
               title: '已退出登录',
               icon: 'success'
@@ -164,17 +152,17 @@ export default {
         }
       });
     },
-    
+
     switchTab(tab) {
       if (tab === this.activeTab) return;
-      
+
       if (tab === 'todo') {
-        uni.redirectTo({
-          url: '/pages/index/index'
+        uni.reLaunch({
+          url: '/pages/index'
         });
       } else if (tab === 'stats') {
-        uni.redirectTo({
-          url: '/pages/stats/index'
+        uni.reLaunch({
+          url: '/pages/stats'
         });
       }
     }
@@ -183,35 +171,35 @@ export default {
 </script>
 
 <style>
-.mine-container {
+.container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f5f5f5;
+  background: #f7f8fa;
   max-width: 500px;
   margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   position: relative;
 }
 
-/* 用户信息部分 */
-.user-info-section {
+.top-nav.user-info-section {
   display: flex;
   align-items: center;
   padding: 40rpx 30rpx;
-  background: linear-gradient(to right, #4a90e2, #6eb4f7);
+  background: #fff;
   border-bottom-left-radius: 30rpx;
   border-bottom-right-radius: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
 }
 
 .user-avatar {
-  width: 140rpx;
-  height: 140rpx;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
   overflow: hidden;
-  border: 4rpx solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  border: 4rpx solid #f0f0f0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  background: #f5f5f5;
 }
 
 .default-avatar {
@@ -220,9 +208,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(45deg, #fe2c55, #ff6b81);
+  background: #4a90e2;
   color: white;
-  font-size: 60rpx;
+  font-size: 48rpx;
   font-weight: bold;
 }
 
@@ -232,69 +220,82 @@ export default {
 }
 
 .user-details {
-  margin-left: 30rpx;
+  margin-left: 24rpx;
 }
 
 .user-name {
-  font-size: 36rpx;
-  color: #ffffff;
+  font-size: 32rpx;
+  color: #222;
   font-weight: bold;
-  display: block;
-  margin-bottom: 10rpx;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+  margin-bottom: 8rpx;
 }
 
 .user-id {
   font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
-  display: block;
+  color: #888;
 }
 
-/* 内容区域 */
 .content-section {
   flex: 1;
-  padding: 30rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 32rpx 24rpx 120rpx 24rpx;
+  background: #f7f8fa;
 }
 
-.empty-content {
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+  padding: 48rpx 0;
   text-align: center;
 }
 
 .empty-text {
+  color: #bbb;
   font-size: 28rpx;
-  color: #999;
 }
 
-/* 底部导航栏 */
+/* 还原底部导航栏样式 */
 .tab-bar {
   display: flex;
+  justify-content: space-around;
+  align-items: center;
   height: 100rpx;
-  background-color: #ffffff;
-  border-top: 1rpx solid #eeeeee;
+  background: #fff;
+  border-top-left-radius: 24rpx;
+  border-top-right-radius: 24rpx;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.04);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .tab-item {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  color: #999999;
-}
-
-.tab-icon {
-  font-size: 40rpx;
-  margin-bottom: 4rpx;
-}
-
-.tab-text {
+  justify-content: center;
+  color: #888;
   font-size: 24rpx;
+  padding: 8rpx 0;
 }
 
 .tab-item.active {
   color: #4a90e2;
 }
-</style> 
+
+.tab-icon {
+  font-size: 38rpx;
+  margin-bottom: 2rpx;
+}
+
+.tab-text {
+  font-size: 22rpx;
+  margin-top: 2rpx;
+}
+
+/* 其他样式保持不变 */
+</style>

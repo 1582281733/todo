@@ -10,25 +10,25 @@
         <text>保存</text>
       </view>
     </view>
-    
+
     <!-- 个人资料表单 -->
     <view class="profile-form">
       <!-- 头像 -->
       <view class="avatar-section">
-        <image 
-          class="avatar" 
-          :src="userInfo.avatar || '/static/images/default-avatar.png'" 
+        <image
+          class="avatar"
+          :src="userInfo.avatar || '/static/images/default-avatar.png'"
           @click="chooseAvatar"
         />
         <text class="change-avatar">点击更换头像</text>
       </view>
-      
+
       <!-- 用户名 -->
       <view class="form-item">
         <text class="form-label">用户名</text>
         <input class="form-input" type="text" v-model="userInfo.username" placeholder="请输入用户名" />
       </view>
-      
+
       <!-- 性别 -->
       <view class="form-item">
         <text class="form-label">性别</text>
@@ -36,7 +36,7 @@
           <view class="picker-value">{{ userInfo.gender ? (userInfo.gender === 'male' ? '男' : '女') : '请选择' }}</view>
         </picker>
       </view>
-      
+
       <!-- 生日 -->
       <view class="form-item">
         <text class="form-label">生日</text>
@@ -44,13 +44,13 @@
           <view class="picker-value">{{ userInfo.birthday || '请选择' }}</view>
         </picker>
       </view>
-      
+
       <!-- 个性签名 -->
       <view class="form-item">
         <text class="form-label">个性签名</text>
         <textarea class="form-textarea" v-model="userInfo.signature" placeholder="请输入个性签名" />
       </view>
-      
+
       <!-- 退出登录按钮 -->
       <view class="logout-section">
         <view class="logout-button" @click="handleLogout">
@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import api from '../../utils/api.js';
-import storage from '../../utils/storage.js';
+import api from '../utils/api.js';
+import storage from '../utils/storage.js';
 
 export default {
   data() {
@@ -88,14 +88,14 @@ export default {
     goBack() {
       uni.navigateBack();
     },
-    
+
     // 获取用户信息
     getUserInfo() {
       // 先从本地获取
       const localUserInfo = storage.getUserInfo();
       if (localUserInfo) {
         this.userInfo = { ...this.userInfo, ...localUserInfo };
-        
+
         // 设置性别索引
         if (this.userInfo.gender === 'male') {
           this.genderIndex = 0;
@@ -103,14 +103,14 @@ export default {
           this.genderIndex = 1;
         }
       }
-      
+
       // 从服务器获取最新信息
       this.loading = true;
-      
+
       api.user.getProfile()
         .then(res => {
           this.loading = false;
-          
+
           if (res.code === 200) {
             // 更新用户信息
             this.userInfo = {
@@ -122,7 +122,7 @@ export default {
               birthday: res.data.birthday,
               signature: res.data.signature
             };
-            
+
             // 设置性别索引
             if (this.userInfo.gender === 'male') {
               this.genderIndex = 0;
@@ -134,14 +134,14 @@ export default {
         .catch(err => {
           this.loading = false;
           console.error('获取用户资料失败:', err);
-          
+
           uni.showToast({
             title: '获取用户资料失败',
             icon: 'none'
           });
         });
     },
-    
+
     // 选择头像
     chooseAvatar() {
       uni.chooseImage({
@@ -150,21 +150,21 @@ export default {
         sourceType: ['album', 'camera'],
         success: (res) => {
           const tempFilePath = res.tempFilePaths[0];
-          
+
           // 显示上传中
           uni.showLoading({
             title: '上传中...'
           });
-          
+
           // 上传头像
           api.user.uploadAvatar(tempFilePath)
             .then(res => {
               uni.hideLoading();
-              
+
               if (res.code === 200) {
                 // 更新头像
                 this.userInfo.avatar = res.data.avatarUrl;
-                
+
                 uni.showToast({
                   title: '头像上传成功',
                   icon: 'success'
@@ -178,29 +178,29 @@ export default {
             })
             .catch(err => {
               uni.hideLoading();
-              
+
               uni.showToast({
                 title: '头像上传失败',
                 icon: 'none'
               });
-              
+
               console.error('头像上传失败:', err);
             });
         }
       });
     },
-    
+
     // 性别选择变化
     onGenderChange(e) {
       this.genderIndex = e.detail.value;
       this.userInfo.gender = this.genderIndex === 0 ? 'male' : 'female';
     },
-    
+
     // 生日选择变化
     onBirthdayChange(e) {
       this.userInfo.birthday = e.detail.value;
     },
-    
+
     // 保存个人资料
     saveProfile() {
       // 表单验证
@@ -211,13 +211,13 @@ export default {
         });
         return;
       }
-      
+
       // 显示保存中
       this.loading = true;
       uni.showLoading({
         title: '保存中...'
       });
-      
+
       // 构建更新数据
       const updateData = {
         username: this.userInfo.username,
@@ -225,13 +225,13 @@ export default {
         birthday: this.userInfo.birthday,
         signature: this.userInfo.signature
       };
-      
+
       // 调用更新接口
       api.user.updateProfile(updateData)
         .then(res => {
           uni.hideLoading();
           this.loading = false;
-          
+
           if (res.code === 200) {
             // 更新本地存储
             const currentUserInfo = storage.getUserInfo() || {};
@@ -240,12 +240,12 @@ export default {
               ...updateData
             };
             storage.saveLoginInfo(storage.getToken(), updatedUserInfo);
-            
+
             uni.showToast({
               title: '保存成功',
               icon: 'success'
             });
-            
+
             // 返回上一页
             setTimeout(() => {
               uni.navigateBack();
@@ -260,16 +260,16 @@ export default {
         .catch(err => {
           uni.hideLoading();
           this.loading = false;
-          
+
           uni.showToast({
             title: '保存失败，请稍后重试',
             icon: 'none'
           });
-          
+
           console.error('保存个人资料失败:', err);
         });
     },
-    
+
     // 退出登录
     handleLogout() {
       uni.showModal({
@@ -282,26 +282,26 @@ export default {
         }
       });
     },
-    
+
     // 执行退出登录
     performLogout() {
       uni.showLoading({
         title: '退出中...'
       });
-      
+
       // 调用退出登录接口
       api.auth.logout()
         .then(res => {
           uni.hideLoading();
-          
+
           // 清除本地存储的登录信息
           storage.clearLoginInfo();
-          
+
           uni.showToast({
             title: '已退出登录',
             icon: 'success'
           });
-          
+
           // 跳转到登录页面
           setTimeout(() => {
             uni.reLaunch({
@@ -311,22 +311,22 @@ export default {
         })
         .catch(err => {
           uni.hideLoading();
-          
+
           // 即使接口调用失败，也要清除本地登录信息
           storage.clearLoginInfo();
-          
+
           uni.showToast({
             title: '已退出登录',
             icon: 'success'
           });
-          
+
           // 跳转到登录页面
           setTimeout(() => {
             uni.reLaunch({
               url: '/pages/login/index'
             });
           }, 1500);
-          
+
           console.error('退出登录接口调用失败:', err);
         });
     }
@@ -485,4 +485,4 @@ export default {
   transform: scale(0.98);
   background-color: #ff3838;
 }
-</style> 
+</style>

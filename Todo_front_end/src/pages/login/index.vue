@@ -2,7 +2,7 @@
   <view class="login-container">
     <!-- 背景渐变 -->
     <view class="bg-gradient"></view>
-    
+
     <!-- 登录卡片 -->
     <view class="login-card">
       <!-- 标题 -->
@@ -15,37 +15,37 @@
         </view>
         <text class="subtitle-text">请登录您的账号</text>
       </view>
-      
+
       <!-- 表单 -->
       <view class="login-form">
         <!-- 用户名输入框 -->
         <view class="input-group">
           <text class="input-label">用户名</text>
           <view class="input-wrapper">
-            <input 
-              class="input-field" 
-              type="text" 
-              v-model="username" 
+            <input
+              class="input-field"
+              type="text"
+              v-model="username"
               placeholder="请输入用户名"
             />
             <text class="input-icon">👤</text>
           </view>
         </view>
-        
+
         <!-- 密码输入框 -->
         <view class="input-group">
           <text class="input-label">密码</text>
           <view class="input-wrapper">
-            <input 
-              class="input-field" 
-              :type="showPassword ? 'text' : 'password'" 
-              v-model="password" 
+            <input
+              class="input-field"
+              :type="showPassword ? 'text' : 'password'"
+              v-model="password"
               placeholder="请输入密码"
             />
             <text class="input-icon">🔒</text>
           </view>
         </view>
-        
+
         <!-- 记住我选项 -->
         <view class="remember-row">
           <view class="checkbox-group" @click="toggleRemember">
@@ -54,12 +54,12 @@
           </view>
           <text class="forgot-password" @click="forgotPassword">忘记密码?</text>
         </view>
-        
+
         <!-- 登录按钮 -->
         <view class="login-btn" @click="handleLogin">
           <text>登录</text>
         </view>
-        
+
         <!-- 注册链接 -->
         <view class="register-link">
           <text>还没有账号? </text>
@@ -96,7 +96,7 @@ export default {
         });
         return;
       }
-      
+
       if (!this.password) {
         uni.showToast({
           title: '请输入密码',
@@ -104,13 +104,13 @@ export default {
         });
         return;
       }
-      
+
       // 显示加载中
       this.loading = true;
       uni.showLoading({
         title: '登录中...'
       });
-      
+
       // 调用登录接口
       api.auth.login({
         username: this.username,
@@ -119,27 +119,27 @@ export default {
         // 隐藏加载
         uni.hideLoading();
         this.loading = false;
-        
+
         if (res.code === 200) {
           // 登录成功，保存用户信息和token
           const { token, userId, username, expiresIn, avatar } = res.data;
-          
+
           // 保存登录信息
           storage.saveLoginInfo(token, {
             id: userId,
             username,
             avatar
           }, expiresIn);
-          
+
           uni.showToast({
             title: '登录成功',
             icon: 'success'
           });
-          
+
           // 跳转到待办首页
           setTimeout(() => {
             uni.reLaunch({
-              url: '/pages/index/index'
+              url: '/pages/index'
             });
           }, 1500);
         } else {
@@ -152,7 +152,7 @@ export default {
         // 隐藏加载
         uni.hideLoading();
         this.loading = false;
-        
+
         uni.showToast({
           title: '登录失败，请稍后重试',
           icon: 'none'
@@ -357,4 +357,4 @@ export default {
   color: #818cf8;
   font-weight: 500;
 }
-</style> 
+</style>

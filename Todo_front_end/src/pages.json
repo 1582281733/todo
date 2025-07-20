@@ -7,35 +7,35 @@
 	},
 	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/index",
 			"style": {
 				"navigationBarTitleText": "待办清单",
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/timer/index",
+			"path": "pages/timer",
 			"style": {
 				"navigationBarTitleText": "专注计时",
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/rest/index",
+			"path": "pages/rest",
 			"style": {
 				"navigationBarTitleText": "休息时间",
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/mine/index",
+			"path": "pages/mine",
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/stats/index",
+			"path": "pages/stats",
 			"style": {
 				"navigationBarTitleText": "数据统计",
 				"navigationStyle": "custom"
@@ -49,7 +49,7 @@
 			}
 		},
 		{
-			"path": "pages/profile/index",
+			"path": "pages/profile",
 			"style": {
 				"navigationBarTitleText": "个人资料",
 				"navigationStyle": "custom"
