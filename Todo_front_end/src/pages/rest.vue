@@ -51,7 +51,6 @@ export default {
       cardImages: [
         '/static/1001.jpg',
         '/static/wallhaven-j3x3x5.jpg',
-        '/static/wallhaven-zypyyv.png',
         '/static/wallhaven-gpwp1d.jpg',
         '/static/3.jpg',
         '/static/5.png',
@@ -145,6 +144,9 @@ export default {
   justify-content: center;
   height: 100vh;
   overflow: hidden;
+  /* === 新增：为顶部状态栏留出空间 === */
+  padding-top: var(--status-bar-height);
+  box-sizing: border-box;
 }
 
 .bg-gradient {

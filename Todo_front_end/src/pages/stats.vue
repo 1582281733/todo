@@ -293,11 +293,11 @@ export default {
           icon: 'none'
         });
 
-        setTimeout(() => {
-          uni.navigateTo({
-            url: '/pages/login/index'
-          });
-        }, 1500);
+        // setTimeout(() => {
+        //   uni.navigateTo({
+        //     url: '/pages/login/index'
+        //   });
+        // }, 1500);
 
         return;
       }
@@ -458,6 +458,9 @@ export default {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);  /* ← 阴影参数同步 */
   position: relative;
   overflow: hidden;                 /* ← 新增：防止整体超高 */
+  /* === 新增：为顶部状态栏留出空间 === */
+  padding-top: var(--status-bar-height);
+  box-sizing: border-box;
 }
 
 .nav-bar {

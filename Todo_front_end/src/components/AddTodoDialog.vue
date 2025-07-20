@@ -13,130 +13,76 @@
           </view>
         </view>
       </view>
-      
+
       <!-- 输入区域 -->
       <view class="add-todo-content">
         <view class="input-group">
-          <view class="input-label">
-            <text class="label-dot"></text>
-            <text>请输入待办名称</text>
-          </view>
-          <input 
-            class="todo-input" 
-            type="text" 
-            v-model="todoName" 
+          <input
+            class="todo-input"
+            type="text"
+            v-model="todoName"
             placeholder="请输入待办名称"
             maxlength="20"
           />
           <view class="input-border"></view>
         </view>
-        
-        <!-- 类型选择 -->
-        <view class="type-selector">
-          <view 
-            class="type-item" 
-            :class="{ active: selectedType === 'normal' }"
-            @click="selectedType = 'normal'"
-          >
-            学习
-          </view>
-          <view 
-            class="type-item" 
-            :class="{ active: selectedType === 'goal' }"
-            @click="selectedType = 'goal'"
-          >
-            运动
-          </view>
-          <view 
-            class="type-item" 
-            :class="{ active: selectedType === 'habit' }"
-            @click="selectedType = 'habit'"
-          >
-            休息
-          </view>
-        </view>
-        
-        <!-- 计时方式选择 -->
-        <view class="timer-selector">
-          <view 
-            class="timer-item" 
-            :class="{ active: selectedTimer === 'countdown' }"
-            @click="selectedTimer = 'countdown'"
-          >
-            倒计时
-          </view>
-          <view 
-            class="timer-item" 
-            :class="{ active: selectedTimer === 'countup' }"
-            @click="selectedTimer = 'countup'"
-          >
-            正向计时
-          </view>
-          <view 
-            class="timer-item" 
-            :class="{ active: selectedTimer === 'nocount' }"
-            @click="selectedTimer = 'nocount'"
-          >
-            不计时
-          </view>
-        </view>
-        
+
         <!-- 时长选择 -->
         <view class="duration-selector">
-          <view 
-            class="duration-item" 
+          <view
+            class="duration-item"
             :class="{ active: selectedDuration === 25 }"
             @click="selectedDuration = 25"
           >
             25分钟
           </view>
-          <view 
-            class="duration-item" 
+          <view
+            class="duration-item"
             :class="{ active: selectedDuration === 35 }"
             @click="selectedDuration = 35"
           >
             35分钟
           </view>
-          <view 
-            class="duration-item" 
+          <view
+            class="duration-item"
             :class="{ active: selectedDuration === 'custom' }"
             @click="showCustomDuration"
           >
             自定义
           </view>
         </view>
-        
+
         <!-- 自定义时长输入 -->
         <view class="custom-duration" v-if="isCustomDuration">
-          <input 
-            class="duration-input" 
-            type="number" 
-            v-model="customDurationValue" 
+          <input
+            class="duration-input"
+            type="number"
+            v-model="customDurationValue"
             placeholder="请输入分钟数"
           />
           <text class="unit">分钟</text>
         </view>
-        
+
         <!-- 提示文本 -->
         <view class="tip-text">
           *倒计时25分钟即标准番茄钟时间
         </view>
-        
+
         <!-- 高级设置按钮 -->
         <view class="advanced-settings" @click="toggleAdvancedSettings">
-          <text>展开更多高级设置</text>
+          <text>更多高级设置</text>
           <text class="iconfont" :class="isAdvancedOpen ? 'icon-up' : 'icon-down'"></text>
         </view>
-        
+
         <!-- 高级设置面板 -->
         <view class="advanced-panel" v-if="isAdvancedOpen">
           <!-- 背景颜色选择 -->
           <view class="color-selector">
             <text class="section-title">背景颜色</text>
             <view class="color-list">
-              <view 
-                class="color-item" 
-                v-for="(color, index) in bgColors" 
+              <view
+                class="color-item"
+                v-for="(color, index) in bgColors"
                 :key="index"
                 :style="{ backgroundColor: color }"
                 :class="{ active: selectedBgColor === color }"
@@ -144,18 +90,18 @@
               ></view>
             </view>
           </view>
-          
+
           <!-- 休息时间设置 -->
           <view class="rest-setting">
             <text class="section-title">休息时间</text>
             <view class="rest-slider">
-              <slider 
-                :value="restDuration" 
-                :min="1" 
-                :max="15" 
-                :step="1" 
-                show-value 
-                @change="onRestDurationChange" 
+              <slider
+                :value="restDuration"
+                :min="1"
+                :max="15"
+                :step="1"
+                show-value
+                @change="onRestDurationChange"
               />
             </view>
           </view>
@@ -185,7 +131,7 @@ export default {
       isAdvancedOpen: false,
       restDuration: 5,
       bgColors: [
-        '#1a1a1a', '#1e4e5f', '#b88c7d', '#6e5c7e', 
+        '#1a1a1a', '#1e4e5f', '#b88c7d', '#6e5c7e',
         '#a5c1b5', '#f3c4b4', '#4a90e2', '#50c878'
       ],
       selectedBgColor: '#4a90e2'
@@ -209,7 +155,7 @@ export default {
         });
         return;
       }
-      
+
       // 构建待办数据
       const todoData = {
         title: this.todoName.trim(),
@@ -219,7 +165,7 @@ export default {
         bgColor: this.selectedBgColor,
         restDuration: this.restDuration
       };
-      
+
       this.$emit('confirm', todoData);
       this.$emit('update-visible', false);
       this.resetForm();
@@ -515,4 +461,4 @@ export default {
 .rest-slider {
   padding: 0 10rpx;
 }
-</style> 
+</style>

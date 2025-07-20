@@ -1,6 +1,7 @@
 // api.js - 封装后端API接口请求
 
 // 基础URL - 修改为正确的后端服务器地址和端口
+// const BASE_URL = 'http://42.192.206.4:7080/api/v1'; // 部署打包
 const BASE_URL = 'http://localhost:7080/api/v1'; // 本地
 
 // 请求方法封装

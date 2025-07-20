@@ -1,23 +1,23 @@
 <template>
-  <view class="login-container">
+  <view class="register-container">
     <!-- 背景渐变 -->
     <view class="bg-gradient"></view>
 
-    <!-- 登录卡片 -->
-    <view class="login-card">
+    <!-- 注册卡片 -->
+    <view class="register-card">
       <!-- 标题 -->
-      <view class="login-title">
+      <view class="register-title">
         <view class="title-row">
           <view class="back-button" @click="goBack">
             <text class="back-icon">←</text>
           </view>
-          <text class="welcome-text">欢迎回来</text>
+          <text class="welcome-text">欢迎加入</text>
         </view>
-        <text class="subtitle-text">请登录您的账号</text>
+        <text class="subtitle-text">创建您的新账号</text>
       </view>
 
       <!-- 表单 -->
-      <view class="login-form">
+      <view class="register-form">
         <!-- 用户名输入框 -->
         <view class="input-group">
           <text class="input-label">用户名</text>
@@ -42,28 +42,42 @@
               v-model="password"
               placeholder="请输入密码"
             />
+            <text class="input-icon" @click="togglePasswordVisibility">🔒</text>
+          </view>
+        </view>
+
+        <!-- 确认密码输入框 -->
+        <view class="input-group">
+          <text class="input-label">确认密码</text>
+          <view class="input-wrapper">
+            <input
+              class="input-field"
+              :type="showPassword ? 'text' : 'password'"
+              v-model="confirmPassword"
+              placeholder="请再次输入密码"
+            />
             <text class="input-icon">🔒</text>
           </view>
         </view>
 
-        <!-- 记住我选项 -->
-        <view class="remember-row">
-          <view class="checkbox-group" @click="toggleRemember">
-            <view class="checkbox" :class="{ checked: rememberMe }"></view>
-            <text class="checkbox-label">记住我</text>
+        <!-- 同意条款选项 -->
+        <view class="terms-row">
+          <view class="checkbox-group" @click="toggleAgree">
+            <view class="checkbox" :class="{ checked: agreeTerms }"></view>
+            <text class="checkbox-label">我已阅读并同意</text>
           </view>
-          <text class="forgot-password" @click="forgotPassword">忘记密码?</text>
+          <text class="terms-link" @click="showTerms">《用户协议》</text>
         </view>
 
-        <!-- 登录按钮 -->
-        <view class="login-btn" @click="handleLogin">
-          <text>登录</text>
+        <!-- 注册按钮 -->
+        <view class="register-btn" @click="handleRegister">
+          <text>注册</text>
         </view>
 
-        <!-- 注册链接 -->
-        <view class="register-link">
-          <text>还没有账号? </text>
-          <text class="link" @click="goToRegister">立即注册</text>
+        <!-- 登录链接 -->
+        <view class="login-link">
+          <text>已有账号? </text>
+          <text class="link" @click="goToLogin">立即登录</text>
         </view>
       </view>
     </view>
@@ -71,24 +85,41 @@
 </template>
 
 <script>
-import api from '../../utils/api.js';
-import storage from '../../utils/storage.js';
+import api from '../utils/api.js';
+import storage from '../utils/storage.js';
 
 export default {
   data() {
     return {
       username: '',
       password: '',
+      confirmPassword: '',
+      email: '',
       showPassword: false,
-      rememberMe: false,
+      agreeTerms: false,
       loading: false
     };
   },
   methods: {
     goBack() {
-      uni.navigateBack();
+      uni.redirectTo({
+        url: '/pages/mine'
+      });
     },
-    handleLogin() {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    toggleAgree() {
+      this.agreeTerms = !this.agreeTerms;
+    },
+    showTerms() {
+      uni.showToast({
+        title: '用户协议功能开发中',
+        icon: 'none'
+      });
+    },
+    handleRegister() {
+      // 表单验证
       if (!this.username.trim()) {
         uni.showToast({
           title: '请输入用户名',
@@ -105,46 +136,63 @@ export default {
         return;
       }
 
+      if (this.password !== this.confirmPassword) {
+        uni.showToast({
+          title: '两次输入的密码不一致',
+          icon: 'none'
+        });
+        return;
+      }
+
+      if (!this.agreeTerms) {
+        uni.showToast({
+          title: '请阅读并同意用户协议',
+          icon: 'none'
+        });
+        return;
+      }
+
       // 显示加载中
       this.loading = true;
       uni.showLoading({
-        title: '登录中...'
+        title: '注册中...'
       });
 
-      // 调用登录接口
-      api.auth.login({
+      // 调用注册接口
+      api.auth.register({
         username: this.username,
-        password: this.password
+        password: this.password,
+        email: this.email || undefined // 如果没有填写邮箱，则不传该字段
       }).then(res => {
         // 隐藏加载
         uni.hideLoading();
         this.loading = false;
 
-        if (res.code === 200) {
-          // 登录成功，保存用户信息和token
-          const { token, userId, username, expiresIn, avatar } = res.data;
+        if (res.code === 201) {
+          // 注册成功，保存用户信息和token
+          const { token, userId, username, expiresIn } = res.data;
 
           // 保存登录信息
           storage.saveLoginInfo(token, {
             id: userId,
             username,
-            avatar
+            avatar: ''
           }, expiresIn);
 
           uni.showToast({
-            title: '登录成功',
+            title: '注册成功',
             icon: 'success'
           });
 
-          // 跳转到待办首页
+          // 跳转到首页
           setTimeout(() => {
-            uni.reLaunch({
+            uni.switchTab({
               url: '/pages/index'
             });
           }, 1500);
         } else {
           uni.showToast({
-            title: res.message || '登录失败',
+            title: res.message || '注册失败',
             icon: 'none'
           });
         }
@@ -154,24 +202,15 @@ export default {
         this.loading = false;
 
         uni.showToast({
-          title: '登录失败，请稍后重试',
+          title: '注册失败，请稍后重试',
           icon: 'none'
         });
-        console.error('登录失败:', err);
+        console.error('注册失败:', err);
       });
     },
-    toggleRemember() {
-      this.rememberMe = !this.rememberMe;
-    },
-    forgotPassword() {
-      uni.showToast({
-        title: '忘记密码功能开发中',
-        icon: 'none'
-      });
-    },
-    goToRegister() {
-      uni.navigateTo({
-        url: '/pages/register/index'
+    goToLogin() {
+      uni.redirectTo({
+        url: '/pages/login'
       });
     }
   }
@@ -179,7 +218,7 @@ export default {
 </script>
 
 <style>
-.login-container {
+.register-container {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -187,6 +226,9 @@ export default {
   justify-content: center;
   height: 100vh;
   width: 100%;
+  /* === 新增：为顶部状态栏留出空间 === */
+  padding-top: var(--status-bar-height);
+  box-sizing: border-box;
 }
 
 .bg-gradient {
@@ -199,7 +241,7 @@ export default {
   z-index: -1;
 }
 
-.login-card {
+.register-card {
   width: 85%;
   max-width: 650rpx;
   background-color: rgba(255, 255, 255, 0.95);
@@ -208,7 +250,7 @@ export default {
   box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
 }
 
-.login-title {
+.register-title {
   text-align: center;
   margin-bottom: 50rpx;
 }
@@ -250,7 +292,7 @@ export default {
   color: #666;
 }
 
-.login-form {
+.register-form {
   width: 100%;
 }
 
@@ -287,9 +329,8 @@ export default {
   color: #818cf8;
 }
 
-.remember-row {
+.terms-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 40rpx;
 }
@@ -328,12 +369,12 @@ export default {
   color: #666;
 }
 
-.forgot-password {
+.terms-link {
   font-size: 26rpx;
   color: #818cf8;
 }
 
-.login-btn {
+.register-btn {
   height: 90rpx;
   background: linear-gradient(to right, #818cf8, #a78bfa);
   border-radius: 45rpx;
@@ -347,7 +388,7 @@ export default {
   box-shadow: 0 6rpx 16rpx rgba(129, 140, 248, 0.4);
 }
 
-.register-link {
+.login-link {
   text-align: center;
   font-size: 26rpx;
   color: #666;

@@ -305,7 +305,7 @@ export default {
           // 跳转到登录页面
           setTimeout(() => {
             uni.reLaunch({
-              url: '/pages/login/index'
+              url: '/pages/login'
             });
           }, 1500);
         })
@@ -323,7 +323,7 @@ export default {
           // 跳转到登录页面
           setTimeout(() => {
             uni.reLaunch({
-              url: '/pages/login/index'
+              url: '/pages/login'
             });
           }, 1500);
 
@@ -343,6 +343,9 @@ export default {
   max-width: 500px;
   margin: 0 auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  /* === 新增：为顶部状态栏留出空间 === */
+  padding-top: var(--status-bar-height);
+  box-sizing: border-box;
 }
 
 .header {

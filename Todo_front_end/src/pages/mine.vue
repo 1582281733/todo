@@ -10,7 +10,6 @@
       </view>
       <view class="user-details">
         <text class="user-name">{{userInfo.username || '游客'}}</text>
-        <text class="user-id">{{isLoggedIn ? 'ID: ' + userInfo.id : '点击登录账号'}}</text>
       </view>
     </view>
 
@@ -38,7 +37,6 @@ export default {
       isLoggedIn: false,
       userInfo: {
         username: '游客',
-        id: '',
         avatar: ''
       },
       loading: false
@@ -68,7 +66,6 @@ export default {
         // 未登录状态下的默认值
         this.userInfo = {
           username: '游客',
-          id: '',
           avatar: ''
         };
       }
@@ -87,7 +84,6 @@ export default {
           if (res.code === 200) {
             // 更新用户信息
             const userInfo = {
-              id: res.data.id,
               username: res.data.username,
               avatar: res.data.avatar,
               email: res.data.email,
@@ -121,7 +117,7 @@ export default {
       } else {
         // 未登录，跳转到登录页面
         uni.navigateTo({
-          url: '/pages/login/index'
+          url: '/pages/login'
         });
       }
     },
@@ -180,6 +176,9 @@ export default {
   margin: 0 auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   position: relative;
+  /* === 新增：为顶部状态栏留出空间 === */
+  padding-top: var(--status-bar-height);
+  box-sizing: border-box;
 }
 
 .top-nav.user-info-section {

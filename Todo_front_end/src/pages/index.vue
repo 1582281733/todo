@@ -82,7 +82,6 @@ export default {
       cardImages: [
         '/static/1001.jpg',
         '/static/wallhaven-j3x3x5.jpg',
-        '/static/wallhaven-zypyyv.png',
         '/static/wallhaven-gpwp1d.jpg',
         '/static/3.jpg',
         '/static/5.png',
@@ -191,12 +190,6 @@ export default {
           title: '请先登录',
           icon: 'none'
         });
-
-        setTimeout(() => {
-          uni.navigateTo({
-            url: '/pages/login/index'
-          });
-        }, 1500);
 
         this.loading = false;
         return;
